@@ -1,4 +1,4 @@
-gplus-domains-quickstart-java
-=============================
+# Google+ Domains Java Quick-Start
 
-This quick-start app is built in Java and lets you get started with the Google+ Domains platform in a few minutes. https://developers.google.com/+/domains/quickstart/java
+The documentation for this quick-start is maintained on developers.google.com. Please see here for more information:
+https://developers.google.com/+/domains/quickstart/java
