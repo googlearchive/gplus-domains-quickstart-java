@@ -21,10 +21,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.model.Acl;
-import com.google.api.services.plus.model.Activity;
-import com.google.api.services.plus.model.PlusAclentryResource;
+import com.google.api.services.plusDomains.PlusDomains;
+import com.google.api.services.plusDomains.model.Acl;
+import com.google.api.services.plusDomains.model.Activity;
+import com.google.api.services.plusDomains.model.PlusDomainsAclentryResource;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -81,14 +81,14 @@ public class DomainDelegation {
    * @throws GeneralSecurityException if authentication fails.
    * @throws IOException if authentication fails.
    */
-  private static Plus authenticate() throws GeneralSecurityException, IOException {
+  private static PlusDomains authenticate() throws GeneralSecurityException, IOException {
 
     System.out.println(String.format("Authenticate the domain for %s", USER_EMAIL));
 
     HttpTransport httpTransport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
 
-    // Setting the sub field with USER_EMAIL allows you to make API calls using the special keyword
+    // Setting the sub field with USER_EMAIL allows you to make API calls using the special keyword 
     // 'me' in place of a user id for that user.
     GoogleCredential credential = new GoogleCredential.Builder()
         .setTransport(httpTransport)
@@ -101,7 +101,7 @@ public class DomainDelegation {
         .build();
 
     // Create and return the Plus service object
-    Plus service = new Plus.Builder(httpTransport, jsonFactory, credential).build();
+    PlusDomains service = new PlusDomains.Builder(httpTransport, jsonFactory, credential).build();
     return service;
   }
 
@@ -115,7 +115,7 @@ public class DomainDelegation {
    */
   public static void main(String[] args) throws Exception {
     // Create an authorized API client
-    Plus service = authenticate();
+    PlusDomains service = authenticate();
 
     // Set the user's ID to 'me': requires the plus.me scope
     String userId = "me";
@@ -124,11 +124,11 @@ public class DomainDelegation {
     System.out.println("Inserting activity");
 
     // Create the audience of the post
-    PlusAclentryResource res = new PlusAclentryResource();
+    PlusDomainsAclentryResource res = new PlusDomainsAclentryResource();
     // Share to the domain
     res.setType("domain");
 
-    List<PlusAclentryResource> aclEntries = new ArrayList<PlusAclentryResource>();
+    List<PlusDomainsAclentryResource> aclEntries = new ArrayList<PlusDomainsAclentryResource>();
     aclEntries.add(res);
 
     Acl acl = new Acl();
@@ -137,7 +137,7 @@ public class DomainDelegation {
     acl.setDomainRestricted(true);
 
     Activity activity = new Activity()
-        .setObject(new Activity.PlusObject().setOriginalContent(msg))
+        .setObject(new Activity.PlusDomainsObject().setOriginalContent(msg))
         .setAccess(acl);
 
     activity = service.activities().insert(userId, activity).execute();
